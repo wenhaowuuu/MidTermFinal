@@ -37,7 +37,7 @@ var clickNextButton = function(){
 
     html = "<div></div>"
          + '<h3>Map: Cities with High Level GDP</h3>'
-         + '<h4>what level is the GDP, please click!</h4>'
+         + '<h4>what level is the GDP, please click the marker!</h4>'
          + '<p class="main">The GDP for this city is<span class="GDP"></span>.</p>'
 
     $('.explanation').empty();
@@ -70,7 +70,7 @@ var clickNextButton = function(){
     //----------------------
     html = "<div></div>"
          + "<h3>Map: Cities with over 9 million population</h3>"
-         + '<h4>what level is the Population, please click!</h4>'
+         + '<h4>what level is the Population, please click the marker!</h4>'
          + '<p class="main">The population for this city is<span class="population"></span> x 10,000 people.</p>'
     $('.explanation').empty();
     $('.explanation').append(html);
@@ -100,6 +100,16 @@ var clickNextButton = function(){
 
   }else if(slideNumber == 3){
     console.log(slideNumber);
+
+    //----------------------
+    html = "<div></div>"
+         + '<h3>Map: Cities with higher than 50% investment in its GDP</h3>'
+         + '<h4>what level is the investment ratio, please click the marker!</h4>'
+         + '<p class="main">The investment ratio for this city is<span class="investment"></span>.</p>'
+    $('.explanation').empty();
+    $('.explanation').append(html);
+
+    //----------------------
     map.removeLayer(layerMappedMarkers);
     filteredData = _.filter(parsedData.features,function(datum){
       return parseFloat(datum.properties['investment proportion'])>50;
@@ -109,33 +119,31 @@ var clickNextButton = function(){
       type: "FeatureCollection",
       features: filteredData
     };
-    layerMappedMarkers = L.geoJSON(filteredData).addTo(map);
-
-    //----------------------
-    html = "<div></div>"
-         + '<h3>Map: Cities with higher than 50% investment in its GDP</h3>'
-         + '<h4>what level is the investment ratio, please click!</h4>'
-         + '<p class="main">The investment ratio for this city is<span class="investment"></span>.</p>'
-    $('.explanation').empty();
-    $('.explanation').append(html);
-
-    //----------------------
-
-  }else{
-    slideNumber = 0;
-    console.log(slideNumber);
-    $('#previous').hide();
-    map.removeLayer(layerMappedMarkers);
-    layerMappedMarkers = L.geoJson(parsedData)
+    layerMappedMarkers = L.geoJSON(filteredData)
                           .eachLayer(function(layer){
                             layer.on('click', function(){
                               console.log('clicked');
                               console.log(layer.feature.properties['investment proportion']);
                               $('.investment').text(" " + layer.feature.properties['investment proportion']);
                             });
-                          }).addTo(map);
+                          })
+                          .addTo(map);
+
+
+  }else{
+    slideNumber = 0;
+    console.log(slideNumber);
+    // document.getElementById("back").style.display = "inline";
+    $('#next').show();
+    $('#previous').hide();
+    $('.explanation').empty();
+    map.removeLayer(layerMappedMarkers);
+    layerMappedMarkers = L.geoJson(parsedData)
+                          .addTo(map);
   }
 };
+
+
 
 /////////////////CLICK PREVIOUS BUTTON
 var clickPreviousButton = function(){
@@ -146,7 +154,7 @@ var clickPreviousButton = function(){
 
     html = "<div></div>"
          + '<h3>Map: Cities with High Level GDP</h3>'
-         + '<h4>what level is the GDP, please click!</h4>'
+         + '<h4>what level is the GDP, please click the marker!</h4>'
          + '<p class="main">The GDP for this city is<span class="GDP"></span>.</p>'
 
     $('.explanation').empty();
@@ -178,7 +186,7 @@ var clickPreviousButton = function(){
 
         html = "<div></div>"
              + "<h3>Map: Cities with over 9 million population</h3>"
-             + '<h4>what level is the Population, please click!</h4>'
+             + '<h4>what level is the Population, please click the marker!</h4>'
              + '<p class="main">The population for this city is<span class="population"></span> x 10,000 people.</p>'
         $('.explanation').empty();
         $('.explanation').append(html);
@@ -209,6 +217,7 @@ var clickPreviousButton = function(){
   }else{
     console.log(slideNumber);
     $('#previous').hide();
+    $('.explanation').empty();
     map.removeLayer(layerMappedMarkers);
     layerMappedMarkers = L.geoJson(parsedData).addTo(map);
   }
